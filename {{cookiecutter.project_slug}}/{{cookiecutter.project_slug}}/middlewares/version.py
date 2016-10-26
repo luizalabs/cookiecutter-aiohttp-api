@@ -1,4 +1,4 @@
-from {{cookiecutter.project_name}}.version import __version__
+from {{cookiecutter.project_slug}}.version import __version__
 
 
 async def version_middleware(app, handler):
