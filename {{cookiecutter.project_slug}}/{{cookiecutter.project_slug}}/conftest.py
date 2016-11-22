@@ -1,6 +1,6 @@
 import pytest
 
-from {{cookiecutter.project_name}}.app import build_app, load_plugins
+from {{cookiecutter.project_slug}}.app import build_app, load_plugins
 
 
 @pytest.fixture
