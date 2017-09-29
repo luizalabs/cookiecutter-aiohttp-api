@@ -1,5 +1,5 @@
-aiohttp==1.0.5
+aiohttp==2.2.5
 asyncio-redis==0.14.3
-gunicorn==19.6.0
-simple-settings==0.9.1
-uvloop==0.5.4
+gunicorn==19.7.1
+simple-settings==0.12.0
+uvloop==0.8.1
