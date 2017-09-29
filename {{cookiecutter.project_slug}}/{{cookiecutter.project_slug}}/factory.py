@@ -6,7 +6,7 @@ from .healthcheck.routes import register_routes as register_heathcheck_routes
 from .middlewares.version import version_middleware
 
 
-def build_app(argv=None, loop=None):
+def build_app(loop=None):
     app = web.Application(loop=loop, middlewares=get_middlewares())
     app.on_startup.append(load_plugins)
     app.on_cleanup.append(cleanup_plugins)
