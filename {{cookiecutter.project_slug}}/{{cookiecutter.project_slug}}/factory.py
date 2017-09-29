@@ -31,5 +31,6 @@ async def load_plugins(app):
     )
     app.redis = redis
 
+
 async def cleanup_plugins(app):
     app.redis.close()
