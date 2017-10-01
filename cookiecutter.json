@@ -1,5 +1,6 @@
 {
 	"project_name": "API",
     "project_slug": "{{ cookiecutter.project_name.lower()|replace(' ', '_')|replace('-', '_') }}",
-    "description": "A short description of the project."
+    "description": "A short description of the project.",
+    "use_redis": "y"
 }

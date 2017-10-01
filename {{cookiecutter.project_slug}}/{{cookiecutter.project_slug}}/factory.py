@@ -23,6 +23,7 @@ def get_middlewares():
 
 
 async def load_plugins(app):
+    {% if cookiecutter.use_redis == 'y' -%}
     redis = await RedisPool.create(
         host=settings.REDIS_HOST,
         port=settings.REDIS_PORT,
@@ -30,7 +31,18 @@ async def load_plugins(app):
         loop=app.loop
     )
     app.redis = redis
+    {% else -%}
+    """
+    Load your plugins here
+    """
+    {%- endif %}
 
 
 async def cleanup_plugins(app):
+    {% if cookiecutter.use_redis == 'y' -%}
     app.redis.close()
+    {% else -%}
+    """
+    Close the plugins you loaded before
+    """
+    {%- endif %}
