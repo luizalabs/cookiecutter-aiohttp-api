@@ -1,13 +1,17 @@
+import asyncio
+
 import pytest
+from aiocache import caches
+from simple_settings import settings
 
 from {{cookiecutter.project_slug}} import app as _app
-from {{cookiecutter.project_slug}} import loop as _loop
 
 
 @pytest.fixture(scope='session')
 def loop():
-    yield _loop
-    _loop.close()
+    loop = asyncio.get_event_loop()
+    yield loop
+    loop.close()
 
 
 @pytest.fixture
@@ -16,5 +20,10 @@ def app(loop):
 
 
 @pytest.fixture(autouse=True)
-def client(test_client, app):
-    return app.loop.run_until_complete(test_client(app))
+async def client(aiohttp_client, app):
+    return await aiohttp_client(app)
+
+
+@pytest.fixture
+async def cache(loop):
+    caches.set_config(settings.CACHE)

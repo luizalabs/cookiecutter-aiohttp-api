@@ -1,28 +1,48 @@
+from unittest import mock
+
 import pytest
 
 
 class TestHealthCheck:
 
     @pytest.fixture
-    def close_redis(self, app):
-        app.redis.close()
-
-        yield
-
-        for c in app.redis._connections:
-            app.loop.run_until_complete(c._reconnect())
-
-    @pytest.fixture
-    def route(self):
+    def url(self):
         return '/healthcheck/'
 
-    async def test_healthcheck_success(self, client, route):
-        response = await client.get(route)
-        assert response.status == 200
+    async def test_should_return_status_ok(self, client, url):
+        async with client.get(url) as response:
+            assert response.status == 200
+            content = await response.json()
 
-        content = await response.json()
-        assert content['redis'] is True
+        assert content == {'status': 'OK'}
 
-    async def test_healthcheck_fail(self, client, close_redis, route):
-        response = await client.get(route)
-        assert response.status == 500
+
+class TestMonitor:
+
+    @pytest.fixture
+    def url(self):
+        return '/monitor/'
+
+    async def test_should_return_cache_ok(self, client, url):
+        async with client.get(url) as response:
+            assert response.status == 200
+            content = await response.json()
+
+        assert content == {'cache': 'OK'}
+
+    async def test_should_return_cache_off_if_cache_check_fail(
+        self,
+        client,
+        url
+    ):
+        expected_msg = 'some error'
+        cache_mock = mock.Mock()
+        cache_mock.set.side_effect = ValueError(expected_msg)
+
+        with mock.patch('{{cookiecutter.project_slug}}.healthcheck.views.caches') as mock_caches:
+            mock_caches.get.return_value = cache_mock
+            async with client.get(url) as response:
+                assert response.status == 500
+                content = await response.json()
+
+        assert content == {'cache': expected_msg}

@@ -7,6 +7,12 @@ requirements-test:
 test:
 	@SIMPLE_SETTINGS={{cookiecutter.project_slug}}.settings.test py.test {{cookiecutter.project_slug}}
 
-check:
+test-matching:
+	@SIMPLE_SETTINGS={{cookiecutter.project_slug}}.settings.test pytest -rxs -k${Q} {{cookiecutter.project_slug}}
+
+lint:
 	@flake8
 	@isort --check
+
+detect-outdated-dependencies:
+	@sh -c 'output=$$(pip list --outdated); echo "$$output"; test -z "$$output"'
