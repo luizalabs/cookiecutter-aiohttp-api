@@ -49,10 +49,6 @@ LOGGING = {
         'asyncio': {
             'level': 'WARNING',
             'propagate': True,
-        },
-        'asyncio_redis': {
-            'level': 'WARNING',
-            'propagate': True,
-        },
+        }
     }
 }

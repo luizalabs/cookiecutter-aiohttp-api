@@ -28,21 +28,22 @@ class TestMonitor:
             assert response.status == 200
             content = await response.json()
 
-        assert content == {'cache': 'OK'}
+        assert content == {'redis': True}
 
     async def test_should_return_cache_off_if_cache_check_fail(
         self,
         client,
         url
     ):
-        expected_msg = 'some error'
         cache_mock = mock.Mock()
-        cache_mock.set.side_effect = ValueError(expected_msg)
+        cache_mock.set.side_effect = ValueError('some error')
 
-        with mock.patch('{{cookiecutter.project_slug}}.healthcheck.views.caches') as mock_caches:
+        with mock.patch(
+            '{{cookiecutter.project_slug}}.healthcheck.views.RedisMonitor._check'
+        ) as mock_caches:
             mock_caches.get.return_value = cache_mock
             async with client.get(url) as response:
                 assert response.status == 500
                 content = await response.json()
 
-        assert content == {'cache': expected_msg}
+        assert content == {'redis': False}
