@@ -4,6 +4,9 @@ run:
 requirements-test:
 	@pip install -r requirements/test.txt
 
+requirements-dev:
+	@pip install -r requirements/dev.txt
+
 test:
 	@SIMPLE_SETTINGS={{cookiecutter.project_slug}}.settings.test py.test {{cookiecutter.project_slug}}
 

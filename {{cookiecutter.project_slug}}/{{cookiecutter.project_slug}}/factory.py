@@ -1,5 +1,6 @@
 from aiocache import caches
 from aiohttp import web
+from aiohttp_swagger import setup_swagger
 from simple_settings import settings
 
 from .healthcheck.routes import register_routes as register_heathcheck_routes
@@ -11,6 +12,12 @@ def build_app(loop=None):
 
     app.on_startup.append(start_plugins)
     app.on_cleanup.append(stop_plugins)
+
+    setup_swagger(
+        app,
+        swagger_url='/docs',
+        swagger_from_file="docs/swagger.yaml"
+    )
 
     register_routes(app)
 
