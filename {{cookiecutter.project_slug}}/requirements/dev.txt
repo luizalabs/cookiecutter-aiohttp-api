@@ -1,0 +1,3 @@
+-r test.txt
+bump2version==0.5.11
+towncrier==19.2.0
