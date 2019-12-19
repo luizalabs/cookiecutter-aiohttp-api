@@ -19,3 +19,18 @@ lint:
 
 detect-outdated-dependencies:
 	@sh -c 'output=$$(pip list --outdated); echo "$$output"; test -z "$$output"'
+
+release-patch: ## Create patch release
+	SIMPLE_SETTINGS={{cookiecutter.project_slug}}.settings.test bump2version patch --dry-run --no-tag --no-commit --list | grep new_version= | sed -e 's/new_version=//' | xargs -n 1 towncrier --yes --version
+	git commit -am 'Update CHANGELOG'
+	bump2version patch
+
+release-minor: ## Create minor release
+	SIMPLE_SETTINGS={{cookiecutter.project_slug}}.settings.test bump2version minor --dry-run --no-tag --no-commit --list | grep new_version= | sed -e 's/new_version=//' | xargs -n 1 towncrier --yes --version
+	git commit -am 'Update CHANGELOG'
+	bump2version minor
+
+release-major: ## Create major release
+	SIMPLE_SETTINGS={{cookiecutter.project_slug}}.settings.test bump2version major --dry-run --no-tag --no-commit --list | grep new_version= | sed -e 's/new_version=//' | xargs -n 1 towncrier --yes --version
+	git commit -am 'Update CHANGELOG'
+	bump2version major
