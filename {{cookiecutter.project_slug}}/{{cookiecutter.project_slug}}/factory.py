@@ -1,5 +1,5 @@
+from aiocache import caches
 from aiohttp import web
-from asyncio_redis import Pool as RedisPool
 from simple_settings import settings
 
 from .healthcheck.routes import register_routes as register_heathcheck_routes
@@ -8,9 +8,12 @@ from .middlewares.version import version_middleware
 
 def build_app(loop=None):
     app = web.Application(loop=loop, middlewares=get_middlewares())
-    app.on_startup.append(load_plugins)
-    app.on_cleanup.append(cleanup_plugins)
+
+    app.on_startup.append(start_plugins)
+    app.on_cleanup.append(stop_plugins)
+
     register_routes(app)
+
     return app
 
 
@@ -22,15 +25,11 @@ def get_middlewares():
     return [version_middleware]
 
 
-async def load_plugins(app):
-    redis = await RedisPool.create(
-        host=settings.REDIS_HOST,
-        port=settings.REDIS_PORT,
-        poolsize=settings.REDIS_POOLSIZE,
-        loop=app.loop
-    )
-    app.redis = redis
+async def start_plugins(app):
+    caches.set_config(settings.CACHE)
 
 
-async def cleanup_plugins(app):
-    app.redis.close()
+async def stop_plugins(app):
+    cache_config = caches.get_config()
+    for cache_name in cache_config:
+        await caches.get(cache_name).close()
