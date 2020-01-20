@@ -1,0 +1,40 @@
+swagger: "2.0"
+info:
+  description: {{cookiecutter.description}}
+  version: "0.0.0"
+  title: {{cookiecutter.project_slug}}
+basePath: /
+schemes:
+  - http
+  - https
+paths:
+  /healthcheck/:
+    get:
+      tags:
+        - healthcheck
+      summary: Get healthcheck
+      description: Get healthcheck
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: success
+        "500":
+          description: error
+  /monitor/:
+    get:
+      tags:
+        - healthcheck
+      summary: Get monitor
+      description: Get monitor
+      consumes:
+        - application/json
+      produces:
+        - application/json
+      responses:
+        "200":
+          description: success
+        "500":
+          description: error
