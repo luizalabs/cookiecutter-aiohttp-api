@@ -3,7 +3,10 @@ from aiohttp import web
 from simple_settings import settings
 
 from .healthcheck.routes import register_routes as register_heathcheck_routes
-from .middlewares.version import version_middleware
+from .contrib.middlewares import (
+    exception_handler_middleware,
+    version_middleware
+)
 
 
 def build_app(loop=None):
@@ -22,7 +25,7 @@ def register_routes(app):
 
 
 def get_middlewares():
-    return [version_middleware]
+    return [version_middleware, exception_handler_middleware]
 
 
 async def start_plugins(app):

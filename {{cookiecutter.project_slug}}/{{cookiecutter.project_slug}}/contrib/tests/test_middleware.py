@@ -6,6 +6,7 @@ from aiohttp.web import HTTPGatewayTimeout
 from {{cookiecutter.project_slug}}.contrib.exceptions import APIException
 from {{cookiecutter.project_slug}}.contrib.middlewares import exception_handler_middleware
 from {{cookiecutter.project_slug}}.contrib.response import JSONResponse
+from {{cookiecutter.project_slug}}.version import __version__
 
 httperror_message = 'Http error message'
 
@@ -24,6 +25,14 @@ async def http_error_handler(request):
 
 async def unexpected_error_handler(request):
     raise Exception()
+
+
+class TestVersionMiddleware:
+
+    async def test_version_middleware(self, client):
+        async with client.get('/healthcheck/') as response:
+            assert response.status == 200
+            assert response.headers.get('X-API-Version') == __version__
 
 
 class TestResponseErrorMiddleware:

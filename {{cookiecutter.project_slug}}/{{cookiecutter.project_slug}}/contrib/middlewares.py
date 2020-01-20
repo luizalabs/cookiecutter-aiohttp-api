@@ -4,6 +4,7 @@ from aiohttp import web
 
 from {{cookiecutter.project_slug}}.contrib.exceptions import APIException
 from {{cookiecutter.project_slug}}.contrib.response import JSONResponse
+from {{cookiecutter.project_slug}}.version import __version__
 
 logger = logging.getLogger(__name__)
 
@@ -33,3 +34,10 @@ async def exception_handler_middleware(request, handler):
             'error_message': 'Internal server error'
         }
         return JSONResponse(data=data, status=500)
+
+
+@web.middleware
+async def version_middleware(request, handler):
+    response = await handler(request)
+    response.headers['X-API-Version'] = __version__
+    return response
